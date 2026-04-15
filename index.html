@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseño del Prototipo - Farmacia Santa Cruz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Inter',sans-serif;overflow:hidden;background:#0f0e17;color:#fff;}
+        .presentation{width:100vw;height:100vh;position:relative;}
+        .slide{position:absolute;top:-9999px;left:-9999px;width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2.5rem 3rem;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+        .slide.active{top:0;left:0;opacity:1;z-index:10;}
+        .glass{background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+        .glass-strong{background:rgba(255,255,255,0.07);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.12);border-radius:24px;box-shadow:0 12px 48px rgba(0,0,0,0.4);}
+        .glass-cyan{background:rgba(0,217,255,0.06);border:1px solid rgba(0,217,255,0.2);border-radius:20px;box-shadow:0 0 30px rgba(0,217,255,0.08);}
+        .glass-pink{background:rgba(255,107,157,0.06);border:1px solid rgba(255,107,157,0.2);border-radius:20px;box-shadow:0 0 30px rgba(255,107,157,0.08);}
+        .glow-cyan{text-shadow:0 0 20px rgba(0,217,255,0.4),0 0 60px rgba(0,217,255,0.15);}
+        .bg-animated{background:linear-gradient(135deg,#0f0e17 0%,#1a1a2e 25%,#0f172a 50%,#1e1b4b 75%,#0f0e17 100%);background-size:400% 400%;animation:gradMove 15s ease infinite;}
+        @keyframes gradMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;}
+        .particle{position:absolute;width:3px;height:3px;background:rgba(0,217,255,0.3);border-radius:50%;animation:float linear infinite;}
+        @keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-10vh) rotate(720deg);opacity:0;}}
+        .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#00d9ff,#a855f7,#ff6b9d);z-index:200;transition:width .4s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(0,217,255,0.5);}
+        .nav-btn{position:fixed;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;transition:all .3s;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);color:rgba(255,255,255,0.5);font-size:1.2rem;}
+        .nav-btn:hover{background:rgba(0,217,255,0.15);border-color:rgba(0,217,255,0.4);color:#00d9ff;box-shadow:0 0 20px rgba(0,217,255,0.2);}
+        .nav-left{left:20px;}.nav-right{right:20px;}
+        .card-hover{transition:all .3s cubic-bezier(.4,0,.2,1);}
+        .card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,217,255,0.15);border-color:rgba(0,217,255,0.3);}
+        .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:9999px;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+        .diagram-frame{width:100%;height:75vh;border:none;border-radius:16px;background:white;}
+        .stat-card{position:relative;overflow:hidden;}
+        .stat-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(0,217,255,0.1),transparent,rgba(168,85,247,0.1),transparent);animation:spin 8s linear infinite;}
+        @keyframes spin{100%{transform:rotate(360deg)}}
+        .stat-card-inner{position:relative;z-index:2;background:#0f0e17;border-radius:18px;padding:2rem;height:100%;}
+        .slide.active .fade-up{animation:fadeUp .6s ease forwards;}
+        .slide.active .fade-up-d1{animation:fadeUp .6s ease .1s forwards;opacity:0;}
+        .slide.active .fade-up-d2{animation:fadeUp .6s ease .2s forwards;opacity:0;}
+        .slide.active .fade-up-d3{animation:fadeUp .6s ease .3s forwards;opacity:0;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+        .legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0;}
+        .grad-text{background:linear-gradient(90deg,#00d9ff,#a855f7,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+        .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+    </style>
+</head>
+<body class="bg-animated">
+
+<div class="particles" id="particles"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="presentation">
+
+    <!-- S1: PORTADA -->
+    <div class="slide active">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Proyecto Modular 2026</div>
+            <h1 class="grad-text fade-up" style="font-size:3.5rem;font-weight:900;line-height:1.2;margin-bottom:.5rem;">DISEÑO DEL PROTOTIPO</h1>
+            <h2 class="fade-up-d1" style="font-size:1.5rem;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:.3rem;">SISTEMA DE INVENTARIADO COMPRA Y VENTA</h2>
+            <h3 class="fade-up-d1" style="font-size:1.2rem;font-weight:600;color:#ff6b9d;margin-bottom:.3rem;">Farmacia Santa Cruz</h3>
+            <p class="fade-up-d2" style="font-size:1.05rem;color:#94a3b8;margin-bottom:2rem;">Design of the Prototype — Inventory System for Purchasing and Selling</p>
+            <div class="glass-cyan fade-up-d2" style="padding:1rem 1.5rem;display:inline-block;margin-bottom:2rem;">
+                <p style="font-size:1rem;font-weight:700;color:#00d9ff;">Instituto Nacional de San Martín</p>
+                <p style="font-size:1rem;color:rgba(255,255,255,.6);">2° Bachillerato Técnico en Desarrollo de Software "B"</p>
+            </div>
+            <div class="grid2 fade-up-d3" style="max-width:600px;margin:0 auto;">
+                <div class="glass card-hover" style="padding:.8rem 1rem;text-align:left;border-left:4px solid #00d9ff;border-radius:12px;font-size:1.05rem;"><span style="color:#00d9ff;font-weight:700;">#04</span> Steven Gabriel López Hernández</div>
+                <div class="glass card-hover" style="padding:.8rem 1rem;text-align:left;border-left:4px solid #a855f7;border-radius:12px;font-size:1.05rem;"><span style="color:#a855f7;font-weight:700;">#08</span> Joel Edgardo Mendoza López</div>
+                <div class="glass card-hover" style="padding:.8rem 1rem;text-align:left;border-left:4px solid #ff6b9d;border-radius:12px;font-size:1.05rem;"><span style="color:#ff6b9d;font-weight:700;">#32</span> Guadalupe Abigaíl Romero Pedroza</div>
+                <div class="glass card-hover" style="padding:.8rem 1rem;text-align:left;border-left:4px solid #4ade80;border-radius:12px;font-size:1.05rem;"><span style="color:#4ade80;font-weight:700;">#34</span> Tiffany Alessandra Sermeño Flores</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S2: REFLEXIÓN CITA -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">01 · Reflexión / Reflection</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass" style="padding:1.5rem;">
+                    <p style="font-size:1rem;color:#94a3b8;margin-bottom:.8rem;">"If you can dream it, you can do it."</p>
+                    <p style="font-size:1.2rem;line-height:1.6;">The phrase by Walt Disney means that if a person can imagine or dream something, they also have the ability to achieve it if they work hard for it. You need effort, dedication, consistency, and self-confidence.</p>
+                </div>
+                <div class="glass" style="padding:1.5rem;">
+                    <p style="font-size:1rem;color:#94a3b8;margin-bottom:.8rem;">"Si puedes soñarlo, puedes lograrlo."</p>
+                    <p style="font-size:1.2rem;line-height:1.6;">La frase de Walt Disney significa que si una persona puede imaginar o soñar algo, también tiene la capacidad de lograrlo si trabaja duro por ello. Necesitas esfuerzo, dedicación, consistencia y confianza en ti mismo.</p>
+                </div>
+            </div>
+            <div style="width:60px;height:2px;background:linear-gradient(90deg,#00d9ff,#a855f7);margin:1.5rem auto;"></div>
+            <p style="font-size:1rem;color:#00d9ff;font-weight:600;">— Walt Disney</p>
+        </div>
+    </div>
+
+    <!-- S3: REFLEXIÓN SIGNIFICADO -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">01 · Significado / Meaning</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass" style="padding:1.5rem;text-align:left;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.8rem;">Meaning</h4>
+                    <p style="font-size:1rem;line-height:1.7;">The phrase by Walt Disney means that if a person can imagine or dream something, they also have the ability to achieve it if they work hard for it. You need effort, dedication, consistency, and self-confidence to turn that dream into reality.</p>
+                </div>
+                <div class="glass" style="padding:1.5rem;text-align:left;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.8rem;">Significado</h4>
+                    <p style="font-size:1rem;line-height:1.7;">La frase de Walt Disney significa que si una persona puede imaginar o soñar algo, también tiene la capacidad de lograrlo si trabaja duro por ello. Necesitas esfuerzo, dedicación, consistencia y confianza en ti mismo para convertir ese sueño en realidad.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S4: TÍTULO OBJETIVOS -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="grad-text fade-up" style="font-size:6rem;font-weight:900;">02</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Objetivos</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">Objectives</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#00d9ff,#a855f7);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- S5: OBJ GENERAL -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Objetivo General / General Objective</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass-cyan" style="padding:1.5rem;">
+                    <p style="font-size:1rem;line-height:1.7;">Develop and implement a digital inventory system for the Santa Cruz Pharmacy that allows for the organization and control of medications, reducing economic losses and improving operational efficiency.</p>
+                </div>
+                <div class="glass-cyan" style="padding:1.5rem;">
+                    <p style="font-size:1rem;line-height:1.7;">Desarrollar e implementar un sistema digital de inventario para la Farmacia Santa Cruz que permita organizar y controlar los medicamentos, reduciendo las pérdidas económicas y mejorando la eficiencia operativa del negocio.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S6: OBJ 1-4 -->
+    <div class="slide">
+        <div style="max-width:800px;width:100%;text-align:center;">
+            <h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:2rem;">Objetivos Específicos <span style="color:#00d9ff;">(1 — 4)</span></h2>
+            <div class="grid2 fade-up-d1">
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #00d9ff;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#00d9ff;">+</div><h4 style="color:#00d9ff;font-weight:700;margin-bottom:.3rem;">Registrar medicamentos</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Register all medications and products.</p></div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #a855f7;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#a855f7;">+</div><h4 style="color:#a855f7;font-weight:700;margin-bottom:.3rem;">Controlar el stock</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Control product stock levels with alerts.</p></div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #ff6b9d;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#ff6b9d;">!</div><h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.3rem;">Detectar vencimientos</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Detect products nearing expiration date.</p></div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #4ade80;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#4ade80;">O</div><h4 style="color:#4ade80;font-weight:700;margin-bottom:.3rem;">Busqueda rapida</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Facilitate medication searches using criteria.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S7: OBJ 5-8 -->
+    <div class="slide">
+        <div style="max-width:800px;width:100%;text-align:center;">
+            <h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:2rem;">Objetivos Específicos <span style="color:#00d9ff;">(5 — 8)</span></h2>
+            <div class="grid2 fade-up-d1">
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #fbbf24;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#fbbf24;">=</div><h4 style="color:#fbbf24;font-weight:700;margin-bottom:.3rem;">Generar reportes</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Generate inventory, sales and purchase reports.</p></div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #00d9ff;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#00d9ff;">+</div><h4 style="color:#00d9ff;font-weight:700;margin-bottom:.3rem;">Registrar compras</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Record purchases from suppliers with stock updating.</p></div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #a855f7;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#a855f7;">-</div><h4 style="color:#a855f7;font-weight:700;margin-bottom:.3rem;">Registrar ventas</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Record product sales with automatic stock discounts.</p></div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #ff6b9d;border-radius:16px;"><div style="font-size:1.8rem;margin-bottom:.5rem;color:#ff6b9d;">$</div><h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.3rem;">Monitorear costos</h4><p style="font-size:1rem;color:rgba(255,255,255,.6);">Monitor changes in cost prices to adjust selling prices.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S8: TÍTULO PROBLEMA -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#ff6b9d,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">03</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Situación Problemática</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">Problem Statement</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#ff6b9d,#a855f7);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- S9: CONTEXTO EN -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Context / Contexto</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass-pink" style="padding:1.5rem;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.8rem;">Context</h4>
+                    <p style="font-size:1rem;line-height:1.7;">Santa Cruz Pharmacy manages $12,000 worth of inventory annually. Its manual record-keeping system has caused severe operational and financial problems including product losses and inefficient processes.</p>
+                    <p style="font-size:1rem;margin-top:.8rem;line-height:1.7;">The pharmacy operates in a competitive market and needs to modernize its operations to remain viable and efficient.</p>
+                </div>
+                <div class="glass-pink" style="padding:1.5rem;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.8rem;">Contexto</h4>
+                    <p style="font-size:1rem;line-height:1.7;">La Farmacia Santa Cruz gestiona anualmente $12,000 en inventario. Su sistema manual de registro ha causado severos conflictos operativos y financieros, incluyendo pérdidas de productos y procesos ineficientes.</p>
+                    <p style="font-size:1rem;margin-top:.8rem;line-height:1.7;">La farmacia opera en un mercado competitivo y necesita modernizar sus operaciones para permanecer viable y eficiente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S10: PROBLEMAS EN -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Identified Problems</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass-pink card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">Financial Problems</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>$400 annual losses from expired products</li>
+                        <li>Inability to track cost price changes</li>
+                        <li>Delayed pricing adjustments</li>
+                        <li>No inventory valuation reports</li>
+                    </ul>
+                </div>
+                <div class="glass-pink card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">Problemas Financieros</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>$400 pérdidas anuales por productos vencidos</li>
+                        <li>Incapacidad de rastrear cambios en costos</li>
+                        <li>Ajustes de precios tardíos</li>
+                        <li>Sin reportes de valoración de inventario</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S11: PROBLEMAS 2 -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Identified Problems II</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass-pink card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">Operational Problems</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Difficulty tracking stock levels</li>
+                        <li>Slow product location (manual search)</li>
+                        <li>No expiration date alerts</li>
+                        <li>Decreased customer satisfaction</li>
+                    </ul>
+                </div>
+                <div class="glass-pink card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">Problemas Operativos</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Dificultad para rastrear niveles de stock</li>
+                        <li>Búsqueda lenta de productos (manual)</li>
+                        <li>Sin alertas de fechas de vencimiento</li>
+                        <li>Disminución de satisfacción de clientes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S12: CAUSAS Y EFECTOS -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Causes and Effects / Causas y Efectos</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass" style="padding:1.2rem;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">Root Causes</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Manual inventory system</li>
+                        <li>No digital records</li>
+                        <li>Lack of automation tools</li>
+                        <li>No data analysis capability</li>
+                    </ul>
+                </div>
+                <div class="glass" style="padding:1.2rem;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">Causas Raíz</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Sistema manual de inventario</li>
+                        <li>Sin registros digitales</li>
+                        <li>Falta de herramientas de automatización</li>
+                        <li>Sin capacidad de análisis de datos</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S11: TÍTULO SOLUCIÓN -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#4ade80,#00d9ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">04</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Propuesta de Solución</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">Proposed Solution</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#4ade80,#00d9ff);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- S12: SOLUCIÓN OVERVIEW EN -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">Solution Overview</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass-cyan" style="padding:1.5rem;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.8rem;">The Solution</h4>
+                    <p style="font-size:1rem;line-height:1.7;">A digital inventory management system that automates processes, tracks products, generates alerts, and provides real-time reports for decision-making.</p>
+                    <p style="font-size:1rem;margin-top:.8rem;line-height:1.7;">The system is built using modern web technologies with a user-friendly interface that requires minimal training.</p>
+                </div>
+                <div class="glass-cyan" style="padding:1.5rem;">
+                    <h4 style="color:#4ade80;font-weight:700;margin-bottom:.8rem;">La Solución</h4>
+                    <p style="font-size:1rem;line-height:1.7;">Un sistema digital de gestión de inventario que automatiza procesos, rastrea productos, genera alertas y proporciona reportes en tiempo real para la toma de decisiones.</p>
+                    <p style="font-size:1rem;margin-top:.8rem;line-height:1.7;">El sistema está construido usando tecnologías web modernas con una interfaz fácil de usar que requiere mínimo entrenamiento.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S13: MÓDULOS EN -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">System Modules / Módulos del Sistema</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">Core Modules</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>User Authentication</li>
+                        <li>Product Management (CRUD)</li>
+                        <li>Purchase Recording</li>
+                        <li>Sales / POS System</li>
+                        <li>Inventory Control</li>
+                    </ul>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#4ade80;font-weight:700;margin-bottom:.5rem;">Módulos Principales</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Autenticación de Usuarios</li>
+                        <li>Gestión de Productos (CRUD)</li>
+                        <li>Registro de Compras</li>
+                        <li>Sistema de Ventas / POS</li>
+                        <li>Control de Inventario</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S14: ALERTAS Y REPORTES -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">Alerts and Reports / Alertas y Reportes</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass-pink card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">Alert System</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Low stock warnings</li>
+                        <li>Expiration date alerts</li>
+                        <li>Cost price changes</li>
+                        <li>Unusual sales patterns</li>
+                    </ul>
+                </div>
+                <div class="glass-pink card-hover" style="padding:1rem;text-align:left;border-radius:14px;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">Sistema de Alertas</h4>
+                    <ul style="font-size:.9rem;color:#94a3b8;line-height:1.8;padding-left:1rem;">
+                        <li>Advertencias de stock bajo</li>
+                        <li>Alertas de vencimiento</li>
+                        <li>Cambios en precios de costo</li>
+                        <li>Patrones de venta inusuales</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S15: BENEFICIOS -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">Expected Benefits / Beneficios Esperados</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="stat-card" style="border-radius:20px;border:1px solid rgba(0,217,255,.3);padding:2px;">
+                    <div class="stat-card-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                        <span class="grad-text" style="font-size:3.5rem;font-weight:900;">40%</span>
+                        <span style="font-size:1rem;font-weight:700;margin-top:.5rem;">Loss Reduction</span>
+                        <span style="font-size:.9rem;color:#94a3b8;">Reduction of product losses from expiration</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-radius:20px;border:1px solid rgba(255,107,157,.3);padding:2px;">
+                    <div class="stat-card-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                        <span style="font-size:3.5rem;font-weight:900;background:linear-gradient(90deg,#ff6b9d,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">30%</span>
+                        <span style="font-size:1rem;font-weight:700;margin-top:.5rem;">Time Savings</span>
+                        <span style="font-size:.9rem;color:#94a3b8;">Savings in search and record time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S14-27: CASOS DE USO + SECUENCIA (iframes) -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-01</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Inicio de Sesión</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc01.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-01</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Inicio de Sesión</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq01.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-02</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Registrar Productos</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc02.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-02</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Productos</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq02.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-03</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Registrar Compras</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc03.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-03</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Compras</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq03.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-04</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Registrar Ventas</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc04.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-04</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Ventas</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq04.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-05</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Monitoreo de Costos</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc05.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-05</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Monitoreo de Costos</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq05.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-06</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Alerta de Caducidad</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc06.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-06</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Alerta de Caducidad</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq06.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-07</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Generar Reportes</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc07.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-07</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Generar Reportes</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq07.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S28: DIAGRAMA DE CLASES INTRO -->
+    <div class="slide">
+        <div style="max-width:800px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">05 · Diagrama de Clases / Class Diagram</div>
+            <div class="glass fade-up-d1" style="padding:2rem;text-align:left;margin-bottom:1.5rem;">
+                <div style="display:flex;align-items:flex-start;gap:1rem;">
+                    <div style="width:3rem;height:3rem;border-radius:12px;background:rgba(74,222,128,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">🏗️</div>
+                    <p style="font-size:1rem;line-height:1.7;">La estructura orientada a objetos del sistema: 10 clases, 12 relaciones de asociación, composición.</p>
+                </div>
+            </div>
+            <div class="grid2 fade-up-d2">
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #00d9ff;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">🔹 Principales</h4>
+                    <div style="font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.8;">• Usuario<br>• Producto<br>• Categoría<br>• Proveedor</div>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #a855f7;border-radius:14px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.5rem;">🔸 Transaccionales</h4>
+                    <div style="font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.8;">• Compra / DetalleCompra<br>• Venta / DetalleVenta<br>• Reporte / Alerta</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S29: CLASES VISUAL -->
+    <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.8rem;">Diagrama de Clases — <span style="color:#00d9ff;">Estructura Visual</span></h2><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/clases.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+
+    <!-- S30: ER -->
+    <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.3rem;">Diagrama Entidad-Relación</h2><p class="fade-up" style="font-size:1.05rem;color:#94a3b8;margin-bottom:.8rem;">Entity-Relationship Diagram</p><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/er.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+
+    <!-- S31: TÍTULO ARQUITECTURA -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="fade-up" style="font-size:5rem;">⚙️</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Arquitectura del Sistema</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">System Architecture — MVC (4 capas)</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#fbbf24,#4ade80);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- S32: MVC (tu diseño real) -->
+    <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.8rem;">Diagrama de Componentes <span style="color:#00d9ff;">MVC</span></h2><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/mvc_full.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+
+    <!-- S33: TÍTULO DICCIONARIO DE DATOS -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#00d9ff,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">06</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Diccionario de Datos</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">Data Dictionary</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#00d9ff,#4ade80);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- S34: DICT - Usuarios -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">tabla_usuarios</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Tabla de Usuarios</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_t_usuario.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S35: DICT - Productos -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">tabla_productos</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Tabla de Productos</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_t_producto.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S36: DICT - Proveedor + Categorías -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">proveedores + categorías</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Proveedores y Categorías</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_t_proveedor_cat.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S37: DICT - Compra + Det -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">compras + detalle</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Compras y Detalle de Compra</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_t_compra_det.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S38: DICT - Venta + Det -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">ventas + detalle</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Ventas y Detalle de Venta</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_t_venta_det.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S39: DICT - Alertas -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">tabla_alertas</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Tabla de Alertas</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_t_alerta.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S40: DICT - Relaciones -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">relaciones</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Relaciones entre Tablas</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_full_rel.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S41: TÍTULO INTERFACES -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#a855f7,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">07</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Interfaces del Sistema</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">System Interfaces</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#a855f7,#ff6b9d);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- S42: UI Login -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Interfaz</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">Login</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Pantalla de Inicio de Sesión</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/ui_login.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S43: UI Dashboard -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Interfaz</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">Dashboard</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Panel Principal</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/ui_dashboard.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S44: UI Productos -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Interfaz</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">Productos</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Gestión de Productos</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/ui_productos.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S45: UI Ventas -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Interfaz</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">Ventas</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Punto de Venta</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/ui_ventas.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S46: UI Usuarios -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">Interfaz</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">Usuarios</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Gestión de Usuarios</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/ui_usuarios.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S47: UI Alertas -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);">Interfaz</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">Alertas</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Panel de Alertas</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/ui_alertas.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- S48: ENLACE WEB -->
+    <div class="slide">
+        <div style="max-width:800px;width:100%;text-align:center;">
+            <h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:2rem;">Enlace del Sistema</h2>
+            <div class="grid2 fade-up-d1" style="margin-bottom:2rem;">
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #00d9ff;border-radius:16px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">🖥️ Pantallas Principales</h4>
+                    <div style="font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.8;">• Login — Inicio de sesión<br>• Dashboard — Panel estadístico<br>• Catálogo — Formulario Productos<br>• POS — Caja y Ventas</div>
+                </div>
+                <div class="glass card-hover" style="padding:1.5rem;text-align:left;border-left:4px solid #a855f7;border-radius:16px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.5rem;">📋 Pantallas de Control</h4>
+                    <div style="font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.8;">• Reportes — Historial PDF<br>• Usuarios — Gestión<br>• Proveedores — Perfiles<br>• Alertas — Notificaciones</div>
+                </div>
+            </div>
+            <div class="glass-cyan fade-up-d2" style="padding:1rem 1.5rem;display:inline-block;">
+                <p style="font-weight:700;">🌐 <a href="https://ninyazmax0.github.io/Farmacia/" target="_blank" style="color:#00d9ff;text-decoration:none;">https://ninyazmax0.github.io/Farmacia/</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- S49: CONCLUSIÓN -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Conclusion</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass" style="padding:1.5rem;text-align:left;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.8rem;">Conclusion</h4>
+                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">This module focused on designing a prototype inventory, purchasing, and sales system for Farmacia Santa Cruz taught us how to develop a system's structure without programming it, focusing on planning and organization. We worked on use case diagrams, sequence diagrams, class diagrams, ER diagrams, interfaces, and data dictionaries to understand how information relates within the system.</p>
+                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">This project strengthened teamwork, requiring collaboration, idea-sharing, and organization to achieve a coherent design. The system addresses key problems: inventory losses, inefficient searches, lack of reports, and stock management difficulties.</p>
+                    <p style="font-size:1rem;line-height:1.7;">We conclude that this digital solution optimizes operations, reduces losses by 40%, saves time by 30%, and provides the pharmacy with a powerful tool for growth and competitiveness in the market.</p>
+                </div>
+                <div class="glass" style="padding:1.5rem;text-align:left;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.8rem;">Conclusión</h4>
+                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">Este módulo, enfocado en el diseño del prototipo del sistema de inventariado, compra y venta de la Farmacia Santa Cruz, nos enseñó a desarrollar la estructura de un sistema sin necesidad de programarlo, centrándonos en su planificación y organización. Trabajamos en diagramas de casos de uso, secuencias, clases, ER, interfaces y diccionarios de datos para comprender cómo se relaciona la información dentro del sistema.</p>
+                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">Este proyecto fortaleció el trabajo en equipo, requiriendo colaboración, compartir ideas y organizarnos para lograr un diseño coherente. El sistema aborda problemas clave: pérdidas de inventario, búsquedas ineficientes, falta de reportes y dificultades en la gestión de stock.</p>
+                    <p style="font-size:1rem;line-height:1.7;">Concluimos que esta solución digital optimiza las operaciones, reduce las pérdidas en un 40%, ahorra tiempo en un 30% y proporciona a la farmacia una herramienta poderosa para el crecimiento y competitividad en el mercado.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S50: GRACIAS -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <h1 class="grad-text fade-up" style="font-size:5rem;font-weight:900;line-height:1.2;margin-bottom:.5rem;">¡GRACIAS!</h1>
+            <h3 class="fade-up-d1" style="font-size:2.5rem;font-weight:300;color:rgba(255,255,255,.8);margin-bottom:3rem;">Thank You</h3>
+            <div class="glass-strong fade-up-d2" style="padding:2.5rem;display:inline-block;">
+                <p class="grad-text" style="font-size:2rem;font-weight:700;margin-bottom:.5rem;">Grupo #07</p>
+                <p style="font-size:1.1rem;color:#94a3b8;">Farmacia Santa Cruz</p>
+                <div style="width:60px;height:2px;background:linear-gradient(90deg,#00d9ff,#a855f7);margin:1rem auto 0;"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav-btn nav-left" onclick="changeSlide(-1)">&#10094;</div>
+<div class="nav-btn nav-right" onclick="changeSlide(1)">&#10095;</div>
+<div style="position:fixed;bottom:20px;right:24px;font-size:.9rem;color:rgba(255,255,255,.3);z-index:50;user-select:none;font-family:'JetBrains Mono',monospace;"><span id="cur">1</span> / <span id="tot">50</span></div>
+<div style="position:fixed;bottom:20px;left:24px;font-size:.7rem;color:rgba(255,255,255,.2);z-index:50;user-select:none;">Farmacia Santa Cruz · Grupo 07</div>
+
+<script>
+    // PARTICLES
+    const pc=document.getElementById('particles');
+    for(let i=0;i<25;i++){
+        const p=document.createElement('div');p.className='particle';
+        p.style.left=Math.random()*100+'%';
+        p.style.animationDuration=(8+Math.random()*12)+'s';
+        p.style.animationDelay=Math.random()*10+'s';
+        p.style.width=(2+Math.random()*3)+'px';p.style.height=p.style.width;
+        if(Math.random()>.5) p.style.background='rgba(168,85,247,0.25)';
+        pc.appendChild(p);
+    }
+
+    // SLIDES
+    let cur=1;
+    const slides=document.querySelectorAll('.slide');
+    const total=slides.length;
+    document.getElementById('tot').textContent=total;
+
+    function show(n){
+        if(n>total)cur=1;if(n<1)cur=total;
+        slides.forEach(s=>s.classList.remove('active'));
+        slides[cur-1].classList.add('active');
+        document.getElementById('cur').textContent=cur;
+        document.getElementById('progressBar').style.width=((cur/total)*100)+'%';
+    }
+    function changeSlide(d){cur+=d;show(cur);}
+
+    document.addEventListener('keydown',e=>{
+        if(e.key==='ArrowRight'||e.key===' ')changeSlide(1);
+        else if(e.key==='ArrowLeft')changeSlide(-1);
+    });
+
+    let tx=0;
+    document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX;});
+    document.addEventListener('touchend',e=>{
+        const ex=e.changedTouches[0].screenX;
+        if(tx-ex>50)changeSlide(1);if(ex-tx>50)changeSlide(-1);
+    });
+</script>
+</body>
+</html>
