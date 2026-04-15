@@ -7,7 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Inter',sans-serif;overflow:hidden;background:#0f0e17;color:#fff;}
+        body{font-family:'Inter',sans-serif;overflow:hidden;background:#050510;color:#fff;}
+        .bg-animated{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:#050510;}
+        .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+        .particle{position:absolute;background:#fff;border-radius:50%;animation:fall linear infinite;opacity:0.4;}
+        @keyframes fall{0%{transform:translateY(-10vh) rotate(0deg);opacity:0;}10%{opacity:0.4;}90%{opacity:0.4;}100%{transform:translateY(110vh) rotate(360deg);opacity:0;}}
         .presentation{width:100vw;height:100vh;position:relative;}
         .slide{position:absolute;top:-9999px;left:-9999px;width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2.5rem 3rem;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
         .slide.active{top:0;left:0;opacity:1;z-index:10;}
@@ -16,11 +20,13 @@
         .glass-cyan{background:rgba(0,217,255,0.06);border:1px solid rgba(0,217,255,0.2);border-radius:20px;box-shadow:0 0 30px rgba(0,217,255,0.08);}
         .glass-pink{background:rgba(255,107,157,0.06);border:1px solid rgba(255,107,157,0.2);border-radius:20px;box-shadow:0 0 30px rgba(255,107,157,0.08);}
         .glow-cyan{text-shadow:0 0 20px rgba(0,217,255,0.4),0 0 60px rgba(0,217,255,0.15);}
-        .bg-animated{background:linear-gradient(135deg,#0f0e17 0%,#1a1a2e 25%,#0f172a 50%,#1e1b4b 75%,#0f0e17 100%);background-size:400% 400%;animation:gradMove 15s ease infinite;}
-        @keyframes gradMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;}
-        .particle{position:absolute;width:3px;height:3px;background:rgba(0,217,255,0.3);border-radius:50%;animation:float linear infinite;}
-        @keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-10vh) rotate(720deg);opacity:0;}}
+        
+        /* Lluvia de estrellas */
+        .stars-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;background:linear-gradient(180deg,#020111 0%,#170d36 40%,#20124d 100%);}
+        #lienzoEspacio{position:absolute;top:0;left:0;width:100%;height:100%;}
+        
+        
+        
         .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#00d9ff,#a855f7,#ff6b9d);z-index:200;transition:width .4s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(0,217,255,0.5);}
         .nav-btn{position:fixed;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;transition:all .3s;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);color:rgba(255,255,255,0.5);font-size:1.2rem;}
         .nav-btn:hover{background:rgba(0,217,255,0.15);border-color:rgba(0,217,255,0.4);color:#00d9ff;box-shadow:0 0 20px rgba(0,217,255,0.2);}
@@ -46,8 +52,10 @@
 </head>
 <body class="bg-animated">
 
-<div class="particles" id="particles"></div>
-<div class="progress-bar" id="progressBar"></div>
+<div class="stars-container" id="starsContainer">
+        <canvas id="lienzoEspacio"></canvas>
+    </div>
+    <div class="progress-bar" id="progressBar"></div>
 
 <div class="presentation">
 
@@ -377,39 +385,277 @@
         </div>
     </div>
 
-    <!-- S14-27: CASOS DE USO + SECUENCIA (iframes) -->
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-01</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Inicio de Sesión</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc01.html" class="diagram-frame"></iframe></div></div></div>
+    <!-- S16: TÍTULO REQUISITOS -->
+    <div class="slide">
+        <div style="text-align:center;">
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#00d9ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">05</div>
+            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Requisitos del Sistema</h2>
+            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">System Requirements</p>
+            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#00d9ff,#a855f7);margin:2rem auto;border-radius:2px;"></div>
+        </div>
+    </div>
 
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-01</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Inicio de Sesión</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq01.html" class="diagram-frame"></iframe></div></div></div>
+    <!-- INTRO REQUISITOS FUNCIONALES - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Functional Requirements</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">What are Functional Requirements?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Functional requirements describe the <span style="color:#00d9ff;font-weight:600;">functions and features</span> that the system must perform. They define what the software should do from the user's perspective.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">For the Santa Cruz Pharmacy inventory system, these requirements define the operations the system will perform: authentication, product management, sales, purchases, alerts, and reports.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO REQUISITOS FUNCIONALES - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Requisitos Funcionales</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué son los Requisitos Funcionales?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Los requisitos funcionales describen las <span style="color:#00d9ff;font-weight:600;">funciones y características</span> que el sistema debe realizar. Definen qué debe hacer el software desde la perspectiva del usuario.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Para el sistema de inventario de Farmacia Santa Cruz, estos requisitos definen las operaciones que el sistema realizará: autenticación, gestión de productos, ventas, compras, alertas y reportes.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- S17: REQUISITOS FUNCIONALES 1-4 -->
+    <div class="slide">
+        <div style="max-width:1100px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Functional Requirements (1-4) / Requisitos Funcionales</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #00d9ff;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">RF-001: Inicio de Sesión</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">El sistema debe permitir el acceso mediante usuario y contraseña.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: ALTA | Actores: Administrador, Vendedor</p>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #4ade80;border-radius:14px;">
+                    <h4 style="color:#4ade80;font-weight:700;margin-bottom:.5rem;">RF-002: Registrar Productos</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">Permitir el registro de nuevos productos con nombre, precio, stock, laboratorio, fecha de vencimiento y categoría.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: ALTA | Actor: Administrador</p>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #a855f7;border-radius:14px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.5rem;">RF-003: Registrar Compras</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">Registrar la compra de productos a proveedores, actualizando el stock y el precio de costo.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: ALTA | Actor: Administrador</p>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #ff6b9d;border-radius:14px;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">RF-004: Registrar Ventas</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">Registrar ventas, calcular total, generar factura y descontar stock automáticamente.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: ALTA | Actor: Vendedor</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S18: REQUISITOS FUNCIONALES 5-7 -->
+    <div class="slide">
+        <div style="max-width:1100px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Functional Requirements (5-7) / Requisitos Funcionales</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #fbbf24;border-radius:14px;">
+                    <h4 style="color:#fbbf24;font-weight:700;margin-bottom:.5rem;">RF-005: Monitoreo de Costos</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">Detectar cambios en costo de compra y sugerir actualización de precio de venta.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: MEDIA | Actor: Administrador</p>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #00d9ff;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">RF-006: Alerta de Caducidad</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">Generar alertas para medicamentos próximos a vencer.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: ALTA | Actor: Administrador</p>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #a855f7;border-radius:14px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.5rem;">RF-007: Generar Reportes</h4>
+                    <p style="font-size:.85rem;color:#94a3b8;margin-bottom:.4rem;">Generar reportes de inventario, ventas y vencimientos.</p>
+                    <p style="font-size:.75rem;color:#a855f7;">Prioridad: MEDIA | Actor: Administrador</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO REQUISITOS NO FUNCIONALES - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Non-Functional Requirements</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">What are Non-Functional Requirements?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Non-functional requirements define the <span style="color:#a855f7;font-weight:600;">qualities and constraints</span> of the system. They describe how the system should work, not what it should do.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">They include aspects like performance, security, usability, availability, maintainability, and compatibility. These requirements ensure the system meets quality standards.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO REQUISITOS NO FUNCIONALES - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Requisitos No Funcionales</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué son los Requisitos No Funcionales?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Los requisitos no funcionales definen las <span style="color:#a855f7;font-weight:600;">cualidades y restricciones</span> del sistema. Describen cómo debe funcionar el sistema, no qué debe hacer.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Incluyen aspectos como rendimiento, seguridad, usabilidad, disponibilidad, mantenibilidad y compatibilidad.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- S19: REQUISITOS NO FUNCIONALES 1-4 -->
+    <div class="slide">
+        <div style="max-width:1100px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Non-Functional Requirements (1-4) / Requisitos No Funcionales</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #00d9ff;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">RNF-001: Rendimiento</h4>
+                    <ul style="font-size:.85rem;color:#94a3b8;line-height:1.6;padding-left:1rem;">
+                        <li>Tiempo de respuesta &lt; 2 segundos</li>
+                        <li>Soporte para 10 usuarios simultáneos</li>
+                        <li>Capacidad de 5,000+ productos</li>
+                    </ul>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #4ade80;border-radius:14px;">
+                    <h4 style="color:#4ade80;font-weight:700;margin-bottom:.5rem;">RNF-002: Seguridad</h4>
+                    <ul style="font-size:.85rem;color:#94a3b8;line-height:1.6;padding-left:1rem;">
+                        <li>Contraseñas encriptadas (SHA-256)</li>
+                        <li>Control de acceso por roles</li>
+                        <li>Sesiones con timeout de 30 min</li>
+                    </ul>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #a855f7;border-radius:14px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.5rem;">RNF-003: Usabilidad</h4>
+                    <ul style="font-size:.85rem;color:#94a3b8;line-height:1.6;padding-left:1rem;">
+                        <li>Interfaz intuitiva y fácil de usar</li>
+                        <li>Mínimo entrenamiento requerido</li>
+                        <li>Diseño responsivo (móvil y PC)</li>
+                    </ul>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #ff6b9d;border-radius:14px;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.5rem;">RNF-004: Disponibilidad</h4>
+                    <ul style="font-size:.85rem;color:#94a3b8;line-height:1.6;padding-left:1rem;">
+                        <li>Disponibilidad 99% del tiempo</li>
+                        <li>Recuperación ante errores</li>
+                        <li>Respaldo de datos diario</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S20: REQUISITOS NO FUNCIONALES 5-6 -->
+    <div class="slide">
+        <div style="max-width:1100px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Non-Functional Requirements (5-6) / Requisitos No Funcionales</div>
+            <div class="grid2 fade-up-d1" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #fbbf24;border-radius:14px;">
+                    <h4 style="color:#fbbf24;font-weight:700;margin-bottom:.5rem;">RNF-005: Mantenibilidad</h4>
+                    <ul style="font-size:.85rem;color:#94a3b8;line-height:1.6;padding-left:1rem;">
+                        <li>Código modular y documentado</li>
+                        <li>Fácil actualización de precios</li>
+                        <li>Extensible para futuras funciones</li>
+                    </ul>
+                </div>
+                <div class="glass card-hover" style="padding:1rem;text-align:left;border-left:4px solid #00d9ff;border-radius:14px;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.5rem;">RNF-006: Compatibilidad</h4>
+                    <ul style="font-size:.85rem;color:#94a3b8;line-height:1.6;padding-left:1rem;">
+                        <li>Compatible con Chrome y Edge</li>
+                        <li>Funciona sin conexión a internet</li>
+                        <li>Base de datos SQLite/MySQL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO DIAGRAMAS DE CASOS DE USO - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Use Case Diagrams</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">What is a Use Case Diagram?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">A use case diagram shows the <span style="color:#00d9ff;font-weight:600;">interactions between actors and the system</span>. It represents the functions the system offers and who uses them.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Use cases identify what the system does from the user's perspective, without detailing how it's internally implemented.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO DIAGRAMAS DE CASOS DE USO - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Diagramas de Casos de Uso</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué es un Diagrama de Casos de Uso?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Un diagrama de casos de uso muestra las <span style="color:#00d9ff;font-weight:600;">interacciones entre los actores y el sistema</span>. Representa las funciones que el sistema ofrece y quién las utiliza.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Los casos de uso identifican qué hace el sistema desde la perspectiva del usuario, sin detallar cómo se implementa internamente.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CASOS DE USO -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-01</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Inicio de Sesión</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc01.html" class="diagram-frame"></iframe></div></div></div>
 
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-02</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Registrar Productos</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc02.html" class="diagram-frame"></iframe></div></div></div>
 
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-02</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Productos</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq02.html" class="diagram-frame"></iframe></div></div></div>
-
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-03</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Registrar Compras</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc03.html" class="diagram-frame"></iframe></div></div></div>
-
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-03</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Compras</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq03.html" class="diagram-frame"></iframe></div></div></div>
 
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-04</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Registrar Ventas</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc04.html" class="diagram-frame"></iframe></div></div></div>
 
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-04</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Ventas</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq04.html" class="diagram-frame"></iframe></div></div></div>
-
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-05</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Monitoreo de Costos</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc05.html" class="diagram-frame"></iframe></div></div></div>
-
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-05</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Monitoreo de Costos</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq05.html" class="diagram-frame"></iframe></div></div></div>
 
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-06</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Alerta de Caducidad</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc06.html" class="diagram-frame"></iframe></div></div></div>
 
-    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-06</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Alerta de Caducidad</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq06.html" class="diagram-frame"></iframe></div></div></div>
-
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);">Caso de Uso</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-07</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Generar Reportes</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/uc07.html" class="diagram-frame"></iframe></div></div></div>
+
+    <!-- INTRO DIAGRAMAS DE SECUENCIA -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Sequence Diagrams</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué es un Diagrama de Secuencia?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Un diagrama de secuencia muestra la <span style="color:#a855f7;font-weight:600;">interacción temporal entre objetos</span> en un escenario específico. Representa cómo los mensajes se intercambian en el tiempo.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">A diferencia de los casos de uso, los diagramas de secuencia detallan el orden de las operaciones y la colaboración entre los componentes del sistema.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO DIAGRAMAS DE SECUENCIA - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Sequence Diagrams</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">What is a Sequence Diagram?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">A sequence diagram shows the <span style="color:#a855f7;font-weight:600;">temporal interaction between objects</span> in a specific scenario. It represents how messages are exchanged over time.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Unlike use cases, sequence diagrams detail the order of operations and collaboration between system components.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO DIAGRAMAS DE SECUENCIA - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Diagramas de Secuencia</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué es un Diagrama de Secuencia?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Un diagrama de secuencia muestra la <span style="color:#a855f7;font-weight:600;">interacción temporal entre objetos</span> en un escenario específico. Representa cómo los mensajes se intercambian en el tiempo.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">A diferencia de los casos de uso, los diagramas de secuencia detallan el orden de las operaciones y la colaboración entre los componentes del sistema.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIAGRAMAS DE SECUENCIA -->
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-01</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Inicio de Sesión</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq01.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-02</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Productos</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq02.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-03</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Compras</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq03.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-04</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Registrar Ventas</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq04.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-05</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Monitoreo de Costos</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq05.html" class="diagram-frame"></iframe></div></div></div>
+
+    <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-06</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Alerta de Caducidad</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq06.html" class="diagram-frame"></iframe></div></div></div>
 
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Secuencia</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">CU-07</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">Generar Reportes</h3><div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:.5rem;font-size:.9rem;"><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#ffb3ba;"></span> Actor</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#bae1ff;"></span> Sistema</span><span style="display:flex;align-items:center;gap:.4rem;"><span class="legend-dot" style="background:#baffc9;"></span> Base de Datos</span></div><div class="glass" style="padding:.6rem;"><iframe src="diagramas/seq07.html" class="diagram-frame"></iframe></div></div></div>
 
     <!-- S28: DIAGRAMA DE CLASES INTRO -->
     <div class="slide">
         <div style="max-width:800px;width:100%;text-align:center;">
-            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">05 · Diagrama de Clases / Class Diagram</div>
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">06 · Diagrama de Clases / Class Diagram</div>
             <div class="glass fade-up-d1" style="padding:2rem;text-align:left;margin-bottom:1.5rem;">
                 <div style="display:flex;align-items:flex-start;gap:1rem;">
                     <div style="width:3rem;height:3rem;border-radius:12px;background:rgba(74,222,128,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">🏗️</div>
@@ -429,29 +675,64 @@
         </div>
     </div>
 
-    <!-- S29: CLASES VISUAL -->
+<!-- S29: CLASES VISUAL -->
     <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.8rem;">Diagrama de Clases — <span style="color:#00d9ff;">Estructura Visual</span></h2><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/clases.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+
+    <!-- INTRO DIAGRAMA ER - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">Entity-Relationship Diagram</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">What is an ER Diagram?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">An ER diagram shows the <span style="color:#4ade80;font-weight:600;">database structure</span>. It represents entities, attributes, and relationships between tables.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Essential for designing the physical database structure and ensuring data integrity.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO DIAGRAMA ER - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);margin-bottom:1.5rem;">Diagrama Entidad-Relación</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué es un Diagrama ER?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Un diagrama ER muestra la <span style="color:#4ade80;font-weight:600;">estructura de la base de datos</span>. Representa entidades, atributos y relaciones entre tablas.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Esencial para diseñar la estructura física de la base de datos y garantizar la integridad de los datos.</p>
+            </div>
+        </div>
+    </div>
 
     <!-- S30: ER -->
     <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.3rem;">Diagrama Entidad-Relación</h2><p class="fade-up" style="font-size:1.05rem;color:#94a3b8;margin-bottom:.8rem;">Entity-Relationship Diagram</p><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/er.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
 
-    <!-- S31: TÍTULO ARQUITECTURA -->
+    <!-- INTRO DICCIONARIO DE DATOS - INGLÉS -->
     <div class="slide">
-        <div style="text-align:center;">
-            <div class="fade-up" style="font-size:5rem;">⚙️</div>
-            <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Arquitectura del Sistema</h2>
-            <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">System Architecture — MVC (4 capas)</p>
-            <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#fbbf24,#4ade80);margin:2rem auto;border-radius:2px;"></div>
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Data Dictionary</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">What is a Data Dictionary?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">A data dictionary is a <span style="color:#00d9ff;font-weight:600;">centralized repository</span> that documents all data elements: tables, fields, types, and relationships.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">It ensures consistency and helps developers understand the data structure.</p>
+            </div>
         </div>
     </div>
 
-    <!-- S32: MVC (tu diseño real) -->
-    <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.8rem;">Diagrama de Componentes <span style="color:#00d9ff;">MVC</span></h2><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/mvc_full.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+    <!-- INTRO DICCIONARIO DE DATOS - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(0,217,255,0.15);color:#00d9ff;border:1px solid rgba(0,217,255,0.3);margin-bottom:1.5rem;">Diccionario de Datos</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">¿Qué es un Diccionario de Datos?</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Un diccionario de datos es un <span style="color:#00d9ff;font-weight:600;">repositorio centralizado</span> que documenta todos los elementos de datos: tablas, campos, tipos y relaciones.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Garantiza consistencia y ayuda a los desarrolladores a entender la estructura de datos.</p>
+            </div>
+        </div>
+    </div>
 
     <!-- S33: TÍTULO DICCIONARIO DE DATOS -->
     <div class="slide">
         <div style="text-align:center;">
-            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#00d9ff,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">06</div>
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#00d9ff,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">07</div>
             <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Diccionario de Datos</h2>
             <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">Data Dictionary</p>
             <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#00d9ff,#4ade80);margin:2rem auto;border-radius:2px;"></div>
@@ -479,10 +760,150 @@
     <!-- S40: DICT - Relaciones -->
     <div class="slide"><div style="max-width:1100px;width:100%;text-align:center;"><div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.8rem;"><div class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);">Diccionario</div><div class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1);">relaciones</div></div><h3 style="font-size:1.5rem;font-weight:700;margin-bottom:.8rem;">Relaciones entre Tablas</h3><div class="glass" style="padding:.6rem;"><iframe src="diagramas/dict_full_rel.html" class="diagram-frame"></iframe></div></div></div>
 
+    <!-- INTRO COMPONENTES DEL SISTEMA - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);margin-bottom:1.5rem;">System Components</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">Computer System Components</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">The <span style="color:#fbbf24;font-weight:600;">system architecture</span> represents how software components are organized to fulfill system functions.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">The system uses the MVC pattern with 4 layers: Presentation, Business Logic, Data Access, and Database.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO COMPONENTES DEL SISTEMA - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);margin-bottom:1.5rem;">Componentes del Sistema</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">Componentes del Sistema Informático</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">La <span style="color:#fbbf24;font-weight:600;">arquitectura del sistema</span> representa cómo se organizan los componentes software que interactúan para cumplir las funciones del sistema.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">El sistema utiliza el patrón MVC con 4 capas: Presentación, Lógica de Negocio, Acceso a Datos y Base de Datos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIAGRAMA MVC COMPONENTES -->
+    <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.8rem;">Diagrama de Componentes <span style="color:#fbbf24;">MVC</span></h2><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/mvc_full.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+
+    <!-- INTRO INTERFACES BD - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Database Interfaces</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">Database Interaction Interfaces</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;"><span style="color:#a855f7;font-weight:600;">Database interfaces</span> define how the system communicates with persistent data storage.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">They include CRUD operations (Create, Read, Update, Delete) for each entity: Users, Products, Sales, Purchases, and Alerts.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO INTERFACES BD - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:900px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);margin-bottom:1.5rem;">Interfaces de Base de Datos</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">Interfaces de Interacción con la Base de Datos</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;">Las <span style="color:#a855f7;font-weight:600;">interfaces de base de datos</span> definen cómo el sistema se comunica con el almacenamiento persistente de datos.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;">Incluyen las operaciones CRUD (Create, Read, Update, Delete) para cada entidad: Usuarios, Productos, Ventas, Compras y Alertas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIAGRAMA INTERACCION BD -->
+    <div class="slide"><div style="max-width:1200px;width:100%;text-align:center;"><h2 class="fade-up" style="font-size:1.8rem;font-weight:700;margin-bottom:.3rem;">Interfaces de Interacción con la Base de Datos</h2><p class="fade-up" style="font-size:1.05rem;color:#94a3b8;margin-bottom:.8rem;">CRUD Operations</p><div class="glass fade-up-d1" style="padding:.6rem;"><iframe src="diagramas/dict_full_rel.html" class="diagram-frame" style="height:75vh;"></iframe></div></div></div>
+
+    <!-- INTRO TECNOLOGÍAS - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(6,182,212,0.15);color:#06b6d4;border:1px solid rgba(6,182,212,0.3);margin-bottom:1.5rem;">Technology Stack</div>
+            <h2 class="fade-up-d1" style="font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;">Technologies to Use</h2>
+            <div class="grid2 fade-up-d2" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #06b6d4;border-radius:14px;">
+                    <h4 style="color:#06b6d4;font-weight:700;margin-bottom:.8rem;">Flutter (Frontend)</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Google's framework for cross-platform development. Creates apps for Android, iOS, and Web from a single codebase. Ideal for native performance and large community.</p>
+                    <p style="font-size:.85rem;color:#06b6d4;margin-top:.5rem;">• Language: Dart<br>• UI: Material Design<br>• State: Provider/Riverpod</p>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #a855f7;border-radius:14px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.8rem;">Firebase (Backend)</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Google's platform providing backend services without server management. Ideal for medium-scale projects.</p>
+                    <p style="font-size:.85rem;color:#a855f7;margin-top:.5rem;">• Auth: Authentication<br>• Firestore: NoSQL Database<br>• Cloud Functions: Server Logic</p>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #4ade80;border-radius:14px;">
+                    <h4 style="color:#4ade80;font-weight:700;margin-bottom:.8rem;">Firestore (Database)</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Cloud NoSQL database with real-time sync. Stores data in JSON documents with hierarchical structure.</p>
+                    <p style="font-size:.85rem;color:#4ade80;margin-top:.5rem;">• Collections & Documents<br>• Efficient Queries<br>• Auto-scaling</p>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #fbbf24;border-radius:14px;">
+                    <h4 style="color:#fbbf24;font-weight:700;margin-bottom:.8rem;">Why This Choice?</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Cost reduction (free tier), fast development, single codebase for multiple platforms, and synergy between Flutter and Firebase.</p>
+                    <p style="font-size:.85rem;color:#fbbf24;margin-top:.5rem;">• No upfront cost<br>• Minimal maintenance<br>• Gentle learning curve</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO TECNOLOGÍAS - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(6,182,212,0.15);color:#06b6d4;border:1px solid rgba(6,182,212,0.3);margin-bottom:1.5rem;">Stack Tecnológico</div>
+            <h2 class="fade-up-d1" style="font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;">Tecnologías a Utilizar</h2>
+            <div class="grid2 fade-up-d2" style="text-align:left;">
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #06b6d4;border-radius:14px;">
+                    <h4 style="color:#06b6d4;font-weight:700;margin-bottom:.8rem;">Flutter (Frontend)</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Framework de Google para desarrollo multiplataforma. Permite crear aplicaciones para Android, iOS y Web desde un solo código fuente.</p>
+                    <p style="font-size:.85rem;color:#06b6d4;margin-top:.5rem;">• Lenguaje: Dart<br>• UI: Material Design<br>• Estado: Provider/Riverpod</p>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #a855f7;border-radius:14px;">
+                    <h4 style="color:#a855f7;font-weight:700;margin-bottom:.8rem;">Firebase (Backend)</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Plataforma de Google que proporciona servicios de backend sin gestionar servidores. Ideal para proyectos de escala mediana.</p>
+                    <p style="font-size:.85rem;color:#a855f7;margin-top:.5rem;">• Auth: Autenticación<br>• Firestore: Base de datos NoSQL<br>• Cloud Functions: Lógica del servidor</p>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #4ade80;border-radius:14px;">
+                    <h4 style="color:#4ade80;font-weight:700;margin-bottom:.8rem;">Firestore (Base de Datos)</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Base de datos NoSQL en la nube con sincronización en tiempo real. Almacena datos en documentos JSON con estructura jerárquica.</p>
+                    <p style="font-size:.85rem;color:#4ade80;margin-top:.5rem;">• Colecciones y documentos<br>• Consultas eficientes<br>• Escalabilidad automática</p>
+                </div>
+                <div class="glass card-hover" style="padding:1.2rem;text-align:left;border-left:4px solid #fbbf24;border-radius:14px;">
+                    <h4 style="color:#fbbf24;font-weight:700;margin-bottom:.8rem;">¿Por qué esta elección?</h4>
+                    <p style="font-size:.9rem;color:#94a3b8;line-height:1.7;">Reducción de costos (gratis hasta cierto punto), rápido desarrollo, una sola codebase para múltiples plataformas.</p>
+                    <p style="font-size:.85rem;color:#fbbf24;margin-top:.5rem;">• Sin costo inicial<br>• Mantenimiento mínimo<br>• Curva de aprendizaje suave</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARQUITECTURA - INGLÉS -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(6,182,212,0.15);color:#06b6d4;border:1px solid rgba(6,182,212,0.3);margin-bottom:1.5rem;">Solution Architecture</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">Solution Architecture</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;"><span style="color:#06b6d4;font-weight:600;">SaaS Model:</span> The app runs on Google's cloud, eliminating local infrastructure. Users access from any device with a browser.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;"><span style="color:#a855f7;font-weight:600;">Data Flow:</span> Flutter → Firebase SDK → Firestore. Queries run directly from the client, reducing latency and improving UX.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;"><span style="color:#4ade80;font-weight:600;">Security:</span> Firestore rules for access control, JWT authentication, and mandatory HTTPS for all communications.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARQUITECTURA - ESPAÑOL -->
+    <div class="slide">
+        <div style="max-width:1000px;width:100%;text-align:center;">
+            <div class="badge fade-up" style="background:rgba(6,182,212,0.15);color:#06b6d4;border:1px solid rgba(6,182,212,0.3);margin-bottom:1.5rem;">Arquitectura de la Solución</div>
+            <h2 class="fade-up-d1" style="font-size:2rem;font-weight:700;margin-bottom:1rem;">Arquitectura de la Solución</h2>
+            <div class="glass fade-up-d2" style="padding:1.5rem;text-align:left;">
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;"><span style="color:#06b6d4;font-weight:600;">Modelo SaaS:</span> La aplicación se ejecuta en la nube de Google, eliminando la necesidad de infraestructura local.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;margin-bottom:1rem;"><span style="color:#a855f7;font-weight:600;">Flujo de datos:</span> Flutter → Firebase SDK → Firestore. Las consultas se realizan directamente desde el cliente.</p>
+                <p style="font-size:1rem;line-height:1.8;color:#94a3b8;"><span style="color:#4ade80;font-weight:600;">Seguridad:</span> Reglas de Firestore para control de acceso, autenticación JWT, y HTTPS obligatorio.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- S41: TÍTULO INTERFACES -->
     <div class="slide">
         <div style="text-align:center;">
-            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#a855f7,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">07</div>
+            <div class="fade-up" style="font-size:6rem;font-weight:900;background:linear-gradient(90deg,#a855f7,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">08</div>
             <h2 class="fade-up-d1" style="font-size:3rem;font-weight:700;">Interfaces del Sistema</h2>
             <p class="fade-up-d2" style="font-size:1.5rem;color:#94a3b8;">System Interfaces</p>
             <div class="fade-up-d3" style="width:80px;height:4px;background:linear-gradient(90deg,#a855f7,#ff6b9d);margin:2rem auto;border-radius:2px;"></div>
@@ -530,19 +951,17 @@
     <!-- S49: CONCLUSIÓN -->
     <div class="slide">
         <div style="max-width:1000px;width:100%;text-align:center;">
-            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Conclusion</div>
+            <div class="badge fade-up" style="background:rgba(255,107,157,0.15);color:#ff6b9d;border:1px solid rgba(255,107,157,0.3);margin-bottom:1.5rem;">Conclusion / Conclusión</div>
             <div class="grid2 fade-up-d1" style="text-align:left;">
-                <div class="glass" style="padding:1.5rem;text-align:left;">
-                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.8rem;">Conclusion</h4>
-                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">This module focused on designing a prototype inventory, purchasing, and sales system for Farmacia Santa Cruz taught us how to develop a system's structure without programming it, focusing on planning and organization. We worked on use case diagrams, sequence diagrams, class diagrams, ER diagrams, interfaces, and data dictionaries to understand how information relates within the system.</p>
-                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">This project strengthened teamwork, requiring collaboration, idea-sharing, and organization to achieve a coherent design. The system addresses key problems: inventory losses, inefficient searches, lack of reports, and stock management difficulties.</p>
-                    <p style="font-size:1rem;line-height:1.7;">We conclude that this digital solution optimizes operations, reduces losses by 40%, saves time by 30%, and provides the pharmacy with a powerful tool for growth and competitiveness in the market.</p>
+                <div class="glass" style="padding:1.2rem;text-align:left;">
+                    <h4 style="color:#00d9ff;font-weight:700;margin-bottom:.6rem;">Conclusion</h4>
+                    <p style="font-size:.9rem;line-height:1.6;margin-bottom:.6rem;">This module taught us to develop a system's structure without programming, focusing on planning and organization. We worked on use case diagrams, sequence diagrams, class diagrams, ER diagrams, interfaces, and data dictionaries.</p>
+                    <p style="font-size:.9rem;line-height:1.6;">This project strengthened teamwork and addresses key problems: inventory losses, inefficient searches, lack of reports, and stock management.</p>
                 </div>
-                <div class="glass" style="padding:1.5rem;text-align:left;">
-                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.8rem;">Conclusión</h4>
-                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">Este módulo, enfocado en el diseño del prototipo del sistema de inventariado, compra y venta de la Farmacia Santa Cruz, nos enseñó a desarrollar la estructura de un sistema sin necesidad de programarlo, centrándonos en su planificación y organización. Trabajamos en diagramas de casos de uso, secuencias, clases, ER, interfaces y diccionarios de datos para comprender cómo se relaciona la información dentro del sistema.</p>
-                    <p style="font-size:1rem;line-height:1.7;margin-bottom:.8rem;">Este proyecto fortaleció el trabajo en equipo, requiriendo colaboración, compartir ideas y organizarnos para lograr un diseño coherente. El sistema aborda problemas clave: pérdidas de inventario, búsquedas ineficientes, falta de reportes y dificultades en la gestión de stock.</p>
-                    <p style="font-size:1rem;line-height:1.7;">Concluimos que esta solución digital optimiza las operaciones, reduce las pérdidas en un 40%, ahorra tiempo en un 30% y proporciona a la farmacia una herramienta poderosa para el crecimiento y competitividad en el mercado.</p>
+                <div class="glass" style="padding:1.2rem;text-align:left;">
+                    <h4 style="color:#ff6b9d;font-weight:700;margin-bottom:.6rem;">Conclusión</h4>
+                    <p style="font-size:.9rem;line-height:1.6;margin-bottom:.6rem;">Este módulo nos enseñó a desarrollar la estructura de un sistema sin programarlo, centrándonos en su planificación y organización. Trabajamos en diagramas de casos de uso, secuencias, clases, ER, interfaces y diccionarios de datos.</p>
+                    <p style="font-size:.9rem;line-height:1.6;">Este proyecto fortaleció el trabajo en equipo y aborda problemas clave: pérdidas de inventario, búsquedas ineficientes, falta de reportes y dificultades en la gestión de stock.</p>
                 </div>
             </div>
         </div>
@@ -570,17 +989,28 @@
 <div style="position:fixed;bottom:20px;left:24px;font-size:.7rem;color:rgba(255,255,255,.2);z-index:50;user-select:none;">Farmacia Santa Cruz · Grupo 07</div>
 
 <script>
-    // PARTICLES
-    const pc=document.getElementById('particles');
-    for(let i=0;i<25;i++){
-        const p=document.createElement('div');p.className='particle';
-        p.style.left=Math.random()*100+'%';
-        p.style.animationDuration=(8+Math.random()*12)+'s';
-        p.style.animationDelay=Math.random()*10+'s';
-        p.style.width=(2+Math.random()*3)+'px';p.style.height=p.style.width;
-        if(Math.random()>.5) p.style.background='rgba(168,85,247,0.25)';
-        pc.appendChild(p);
-    }
+    // LLUVIA DE ESTRELLAS - usando canvas
+    (function(){
+        const canvas=document.getElementById('lienzoEspacio');
+        const ctx=canvas.getContext('2d');
+        function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+        window.addEventListener('resize',resize);resize();
+        let estrellas=[],meteoritos=[];
+        const numEstrellas=150,probMeteorito=0.015;
+        class Estrella{
+            constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.r=Math.random()*1.5;this.maxB=Math.random()*0.7+0.2;this.b=Math.random()*this.maxB;this.vB=Math.random()*0.015+0.005;this.crec=Math.random()>0.5;}
+            dibujar(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${this.b})`;ctx.fill();}
+            actualizar(){if(this.crec){this.b+=this.vB;if(this.b>=this.maxB)this.crec=false;}else{this.b-=this.vB;if(this.b<=0){this.b=0;this.crec=true;this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;}}this.dibujar();}
+        }
+        class Meteorito{
+            constructor(){if(Math.random()>0.5){this.x=Math.random()*canvas.width;this.y=0;}else{this.x=canvas.width;this.y=Math.random()*canvas.height;}this.lon=Math.random()*80+40;this.vel=Math.random()*12+8;this.gr=Math.random()*1.2+0.4;this.op=1;this.ang=(Math.PI*0.75)+(Math.random()*0.2-0.1);}
+            dibujar(){const xFin=this.x-Math.cos(this.ang)*this.lon,yFin=this.y-Math.sin(this.ang)*this.lon;const g=ctx.createLinearGradient(this.x,this.y,xFin,yFin);g.addColorStop(0,`rgba(255,255,255,${this.op})`);g.addColorStop(1,'rgba(255,255,255,0)');ctx.strokeStyle=g;ctx.lineWidth=this.gr;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(xFin,yFin);ctx.stroke();}
+            actualizar(){this.x+=Math.cos(this.ang)*this.vel;this.y+=Math.sin(this.ang)*this.vel;this.op-=0.012;this.dibujar();}
+        }
+        for(let i=0;i<numEstrellas;i++)estrellas.push(new Estrella());
+        function animate(){requestAnimationFrame(animate);ctx.clearRect(0,0,canvas.width,canvas.height);estrellas.forEach(e=>e.actualizar());if(Math.random()<probMeteorito)meteoritos.push(new Meteorito());meteoritos.forEach((m,i)=>{m.actualizar();if(m.op<=0||m.y>canvas.height||m.x<0)meteoritos.splice(i,1);});}
+        animate();
+    })();
 
     // SLIDES
     let cur=1;
